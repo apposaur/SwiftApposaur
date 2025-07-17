@@ -73,10 +73,9 @@ do {
 ### 3. Register Users
 
 ```swift
-// Register a user (with optional Apple subscription ID)
+// Register a user 
 let registerRequest = RegisterSDKUserRequest(
-    userId: "user123",
-    appleSubscriptionOriginalTransactionId: "optional_subscription_id"
+    userId: "your internal user id"
 )
 
 do {
@@ -93,8 +92,8 @@ do {
 // Attribute a purchase to track referral conversions
 do {
     try await ApposaurSDK.shared.attributePurchase(
-        productId: "product_id_here",
-        transactionId: "transaction_id_here"
+        productId: "apple_iap_product_id_here",
+        transactionId: "apple_iap_transaction_id_here"
     )
     print("Purchase attributed successfully")
 } catch {
@@ -142,7 +141,7 @@ if #available(iOS 15.0, *) {
 ### 7. Clear Referral Code
 
 ```swift
-// Clear stored referral code if needed
+// Clear input referral code if needed (this is the code that use put when referred by someone else)
 ApposaurSDK.shared.clearReferralCode()
 ```
 
@@ -174,45 +173,6 @@ public struct GetRewardsItem {
     public let offerName: String
 }
 ```
-
-## Error Handling
-
-The SDK provides comprehensive error handling with the `ApposaurSDKError` enum:
-
-```swift
-public enum ApposaurSDKError: Error, LocalizedError {
-    case initializationFailed(String)
-    case invalidAPIKey
-    case networkError(String)
-    case validationFailed(String)
-    case noActiveSubscription
-    case appUserIdNotFound
-    case purchaseFailed(String)
-}
-```
-
-## Key Features
-
-### Automatic Subscription Detection
-The SDK automatically detects active subscriptions using StoreKit 2's `Transaction.currentEntitlements` and uses the subscription product ID for reward operations.
-
-### Transaction Deduplication
-The SDK maintains a list of processed transactions to prevent duplicate processing of the same purchase.
-
-### Persistent Storage
-User data, referral codes, and processed transactions are stored in `UserDefaults` for persistence across app sessions.
-
-### Retry Logic
-Network requests include automatic retry logic with exponential backoff for improved reliability.
-
-## Integration with StoreKit 2
-
-The SDK is designed to work seamlessly with StoreKit 2:
-
-- Automatically detects active subscriptions
-- Integrates with promotional offers for reward redemption
-- Handles purchase verification and completion
-- Supports subscription management workflows
 
 ## License
 
