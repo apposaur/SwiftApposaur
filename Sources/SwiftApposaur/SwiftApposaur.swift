@@ -103,7 +103,7 @@ public enum ApposaurSDKError: Error, LocalizedError {
     }
 }
 
-public class ApposaurSDK {
+public actor ApposaurSDK {
     
     public static let shared = ApposaurSDK()
     private init() {}
