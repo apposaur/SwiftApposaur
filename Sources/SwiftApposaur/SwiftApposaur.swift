@@ -314,6 +314,7 @@ public actor ApposaurSDK {
         }
     }
     
+    @available(iOS 15.0, *)
     private func getActiveSubscriptionProductId() async throws -> String {
         for await result in Transaction.currentEntitlements {
             if case .verified(let transaction) = result,
@@ -334,6 +335,7 @@ public actor ApposaurSDK {
         )
     }
     
+    @available(iOS 15.0, *)
     private func makeRequest(
         endpoint: String,
         method: String,
