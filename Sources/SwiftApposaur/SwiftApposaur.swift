@@ -1,7 +1,8 @@
 import Foundation
 import StoreKit
 
-
+// Add iOS 15+ availability to the entire SDK
+@available(iOS 15.0, *)
 private struct Constants {
     static let baseURL = "https://api.apposaur.io/sdk"
     static let apiHeaderKey = "x-api-key"
@@ -14,10 +15,12 @@ private struct Constants {
     static let sdkProcessedTransactionsKey = "APPOSAUR_SDK_PROCESSED_TRANSACTIONS"
 }
 
+@available(iOS 15.0, *)
 public struct ValidateAppKeyResponse {
     public let valid: Bool
 }
 
+@available(iOS 15.0, *)
 public struct RegisterSDKUserRequest {
     public let userId: String
     public let appleSubscriptionOriginalTransactionId: String?
@@ -28,6 +31,7 @@ public struct RegisterSDKUserRequest {
     }
 }
 
+@available(iOS 15.0, *)
 public struct RegisterSDKUserResponse {
     public let appId: String
     public let externalUserId: String
@@ -37,6 +41,7 @@ public struct RegisterSDKUserResponse {
     public let createdAt: String?
 }
 
+@available(iOS 15.0, *)
 public struct ValidateReferralCodeRequest {
     public let code: String
     
@@ -45,15 +50,18 @@ public struct ValidateReferralCodeRequest {
     }
 }
 
+@available(iOS 15.0, *)
 public struct GetRewardsItem {
     public let appRewardId: String
     public let offerName: String
 }
 
+@available(iOS 15.0, *)
 public struct GetRewardsResponse {
     public let rewards: [GetRewardsItem]
 }
 
+@available(iOS 15.0, *)
 public struct SignedOffer {
     public let offerId: String
     public let keyIdentifier: String
@@ -62,6 +70,7 @@ public struct SignedOffer {
     public let timestamp: Int64
 }
 
+@available(iOS 15.0, *)
 public struct RedeemRewardOfferRequest {
     public let appRewardId: String
     
@@ -70,10 +79,12 @@ public struct RedeemRewardOfferRequest {
     }
 }
 
+@available(iOS 15.0, *)
 public struct RedeemRewardOfferResponse {
     public let success: Bool
 }
 
+@available(iOS 15.0, *)
 public enum ApposaurSDKError: Error, LocalizedError {
     case initializationFailed(String)
     case invalidAPIKey
@@ -103,6 +114,7 @@ public enum ApposaurSDKError: Error, LocalizedError {
     }
 }
 
+@available(iOS 15.0, *)
 public actor ApposaurSDK {
     
     public static let shared = ApposaurSDK()
@@ -244,7 +256,6 @@ public actor ApposaurSDK {
     }
     
     /// Redeem reward offer
-    @available(iOS 15.0, *)
     public func redeemRewardOffer(rewardId: String) async throws {
         guard let appUserId = userDefaults.string(forKey: Constants.sdkAppUserIdKey) else {
             throw ApposaurSDKError.appUserIdNotFound
@@ -314,7 +325,6 @@ public actor ApposaurSDK {
         }
     }
     
-    @available(iOS 15.0, *)
     private func getActiveSubscriptionProductId() async throws -> String {
         for await result in Transaction.currentEntitlements {
             if case .verified(let transaction) = result,
@@ -335,7 +345,6 @@ public actor ApposaurSDK {
         )
     }
     
-    @available(iOS 15.0, *)
     private func makeRequest(
         endpoint: String,
         method: String,
