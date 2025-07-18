@@ -8,6 +8,7 @@ A Swift SDK for integrating Apposaur's referral and rewards system into your iOS
 - **User Registration**: Register users with referral attribution
 - **Purchase Attribution**: Track and attribute purchases to referral sources
 - **Rewards System**: Get and redeem reward offers
+- **Referrals Tracking**: Get list of referrals made by the user
 - **StoreKit Integration**: Seamless integration with Apple's StoreKit 2 framework
 - **iOS Only**: Currently supports iOS platform only
 - **Automatic Subscription Detection**: Automatically detects active subscriptions
@@ -145,6 +146,22 @@ if #available(iOS 15.0, *) {
 ApposaurSDK.shared.clearReferralCode()
 ```
 
+### 8. Get User's Referrals
+
+```swift
+// Get the list of referrals made by the registered user
+do {
+    let referralsResponse = try await ApposaurSDK.shared.getReferrals()
+    print("User's referrals: \(referralsResponse.referrals)")
+    
+    for referral in referralsResponse.referrals {
+        print("Referred: \(referral.referralTo), Status: \(referral.status)")
+    }
+} catch {
+    print("Error getting referrals: \(error)")
+}
+```
+
 ## Data Models
 
 ### ValidateReferralCodeRequest
@@ -171,6 +188,18 @@ public struct GetRewardsResponse {
 public struct GetRewardsItem {
     public let appRewardId: String
     public let offerName: String
+}
+```
+
+### GetReferralsResponse
+```swift
+public struct GetReferralsResponse {
+    public let referrals: [GetReferralsItem]
+}
+
+public struct GetReferralsItem {
+    public let referralTo: String
+    public let status: String
 }
 ```
 

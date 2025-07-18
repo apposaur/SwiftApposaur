@@ -85,6 +85,17 @@ public struct RedeemRewardOfferResponse {
 }
 
 @available(iOS 15.0, *)
+public struct GetReferralsItem {
+    public let referralTo: String
+    public let status: String
+}
+
+@available(iOS 15.0, *)
+public struct GetReferralsResponse {
+    public let referrals: [GetReferralsItem]
+}
+
+@available(iOS 15.0, *)
 public enum ApposaurSDKError: Error, LocalizedError {
     case initializationFailed(String)
     case invalidAPIKey
@@ -253,6 +264,30 @@ public actor ApposaurSDK {
         }
         
         return GetRewardsResponse(rewards: rewards)
+    }
+    
+    /// Get referrals
+    public func getReferrals() async throws -> GetReferralsResponse {
+        guard let appUserId = userDefaults.string(forKey: Constants.sdkAppUserIdKey) else {
+            return GetReferralsResponse(referrals: [])
+        }
+        
+        let url = "/referral/fetch?app_user_id=\(appUserId)"
+        let data = try await makeRequest(endpoint: url, method: "GET")
+        
+        guard let referralsData = data["referrals"] as? [[String: Any]] else {
+            return GetReferralsResponse(referrals: [])
+        }
+        
+        let referrals = referralsData.compactMap { referralDict -> GetReferralsItem? in
+            guard let referralTo = referralDict["referral_to"] as? String,
+                  let status = referralDict["status"] as? String else {
+                return nil
+            }
+            return GetReferralsItem(referralTo: referralTo, status: status)
+        }
+        
+        return GetReferralsResponse(referrals: referrals)
     }
     
     /// Redeem reward offer
